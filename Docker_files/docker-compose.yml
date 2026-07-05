@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  mysql:
+    container_name: mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: "devops"
+      MYSQL_PASSWORD: "root"
+    ports:
+      - "3309:3309"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - two-teir
+  
+  flask:
+    build:
+      context: .
+    container_name: two-tier-backend
+    ports:
+      - "5000:5000"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DB: "devops"
+    networks:
+      - two-teir
+    depends_on:
+      - mysql
+    restart: always
+volumes:
+  mysql-data:
+networks:
+  two-teir:
+
+
